@@ -11,7 +11,7 @@ export default function BMICard(props) {
   return (
     <View style={styles.container}>
       <View style={styles.containerLeft}>
-        <Text style={styles.title}>{bmiResult.result }</Text>
+        <Text style={bmiResult?.result.toLocaleLowerCase() === "normal" ? styles.title : styles.smTitle}>{bmiResult.result}</Text>
         <Text style={styles.value}>BMI {bmiResult.bmi}</Text>
       </View>
       <View style={styles.containerRight}>

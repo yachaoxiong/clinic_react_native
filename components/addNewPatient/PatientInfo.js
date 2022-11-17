@@ -5,7 +5,9 @@ import AppInput from '../ui/AppInput';
 import AppSelect from '../ui/AppSelect';
 import NewPatientCard from './NewPatientCard';
 import styles from './styles/usePatientInfoStyle';
-export default function BasicForm() {
+import { addNewPatient } from '../../services/patientServices';
+
+export default function BasicForm(props) {
   const [title, setTitle] = useState('1/3 Basic Information');
   const [tab, setTab] = useState(1);
   const [PatientInfo, setPatientInfo] = useState({
@@ -22,6 +24,10 @@ export default function BasicForm() {
     height: '',
     weight: '',
   });
+
+  const canAddContactInfo = PatientInfo?.firstName && PatientInfo?.lastName && PatientInfo?.department && PatientInfo?.age && PatientInfo?.gender && PatientInfo?.birthDate 
+
+  const canReview = PatientInfo?.address && PatientInfo?.phone && PatientInfo?.email && PatientInfo?.height && PatientInfo?.weight
   
   const genderOptions = [
     'male',
@@ -115,6 +121,16 @@ export default function BasicForm() {
     setPatientInfo({ ...PatientInfo, [key]: value });
   };
 
+  const handleAddNewPatient = () => {
+  
+    addNewPatient(PatientInfo).then((res) => {
+      props.navigation.navigate('Patients');
+    }).catch((error) => {
+      console.log(error);
+    })
+  };
+
+
   const renderBasicInfo = basicInfo.map((item) => {
     return (
       item.options ? 
@@ -165,6 +181,7 @@ export default function BasicForm() {
             setTab(pre => pre + 1);
             setTitle('2/3 More Information') 
           }}
+          disabled={!canAddContactInfo}
         />
         : tab === 2 ?
         <AppButton
@@ -173,12 +190,11 @@ export default function BasicForm() {
             setTab(pre => pre + 1);
             setTitle('3/3 Confirm Information')
           }}
+          disabled={!canReview}
         />
         : <AppButton
           title="Submit"
-          onPress={() => {
-            console.log(PatientInfo)
-          }}
+          onPress={handleAddNewPatient}
         />
       }
       </View>

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { View, Image, FlatList,Text } from 'react-native';
 import PatientCard from '../components/home/PatientCard';
 import SearchBar from '../components/home/SearchBar';
@@ -12,8 +12,7 @@ export default function HomeScreen(props) {
   const [isNormal, setIsNormal] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const patients = usePatientHooks();
-  console.log("patients", patients)
-
+  
   // search function
   const filteredPatients = useCallback(() => {
     return patients.filter(patient => {
@@ -23,7 +22,6 @@ export default function HomeScreen(props) {
     });
   }, [searchTerm, isCritical, isNormal, patients]);
    
-
   
   return (
     <View style={styles.container}>
@@ -52,7 +50,7 @@ export default function HomeScreen(props) {
         <FlatList 
           style={styles.patientsContainer}
           data={filteredPatients()}
-          renderItem={({ item }) => <PatientCard patient={item} onPress={() => props.navigation.navigate('PatientDetails', { patient:item})} />}
+          renderItem={({ item }) => <PatientCard patient={item} onPress={() => props.navigation.navigate('PatientDetails', { patient:item })} />}
           keyExtractor={item => item._id}
           contentContainerStyle={{ paddingBottom: 120 }}
         />  

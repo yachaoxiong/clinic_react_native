@@ -5,10 +5,11 @@ import AppInput from '../components/ui/AppInput';
 import AppSelect from '../components/ui/AppSelect';
 import AppButton from '../components/ui/AppButton';
 import styles from './styles/useEditPatientStyle';
+import { updatePatient } from '../services/patientServices';
 import moment from 'moment';
 export default function EditPatient(props) {
 
-  const { patient } = props.route.params;
+  const { patient,setPatients } = props.route.params;
   const [patientInfo, setPatientInfo] = useState({...patient});
 
   const genderOptions = [
@@ -16,7 +17,10 @@ export default function EditPatient(props) {
     'female',
     'other',
   ]
-
+  const statusOptions = [
+    'critical',
+    'normal',
+  ]
   const handleUpdatePatientInfo = (key, value) => {
     setPatientInfo({
       ...patientInfo,
@@ -113,9 +117,24 @@ export default function EditPatient(props) {
       type: 'number',
       value: patientInfo?.weight.toString(),
       onChangeText: (text) => handleUpdatePatientInfo(keyName, +text),
+    },
+    {
+      id: 12,
+      keyName:'status',
+      placeholder: 'Status',
+      value: patientInfo?.status,
+      type: 'text',
+      onChangeText: (text) => handleUpdatePatientInfo(keyName, text),
+      options: statusOptions,
     }
   ]
-
+  const handleUpdatePatient = () => {
+    updatePatient(patientInfo).then((response) => {
+      props.navigation.replace("Home")
+    }).catch((error) => {
+      console.log(error)
+    })
+  }
   const renderUpdateForm =  patientUpdateForm.map((item) => {
     return (
       item.options ? 
@@ -145,7 +164,7 @@ export default function EditPatient(props) {
         <View style={styles.buttonContainer}>
           <AppButton
             title="Update"
-            onPress={() => props.navigation.navigate('PatientDetails',{patient: patientInfo})}
+            onPress={handleUpdatePatient}
             />
         </View>
       </ScrollView>

@@ -3,17 +3,16 @@ import { View, Text, Switch } from 'react-native';
 import styles from './styles/useSettingCardStyle';
 import moment from 'moment';
 import AppButton from '../ui/AppButton';
-import { removeToken, removeCurrentUser, } from '../../utils/functions';
+import { removeToken } from '../../utils/functions';
 import { StoreContext } from '../../store/store';
 
-export default function ProfileCard() {
+export default function ProfileCard(props) {
   const { myUser, updateUser } = useContext(StoreContext);
 
   const logout = async () => {
     try {
-      await removeToken();
-      await removeCurrentUser();
-      updateUser('') 
+      updateUser(null) 
+      removeToken();
     }
     catch (err) {
       console.log(err);

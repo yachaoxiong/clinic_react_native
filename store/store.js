@@ -1,6 +1,6 @@
 import React, { createContext, useCallback, useEffect, useState } from 'react'
-import { getCurrentUser } from '../utils/functions'
-
+import { getUser } from '../auth/auth';
+import { getToken } from '../utils/functions';
 export const StoreContext = createContext()
 
 
@@ -14,8 +14,18 @@ const StoreContextProvider = ({ children }) => {
 
   useEffect(() => {
     const initUser = async () => {
-      const user = await getCurrentUser()
-      updateUser(user)
+      try {
+        const token = await getToken();
+        if (token) {
+          const user = await getUser()
+          updateUser(user)
+        } else {
+          updateUser(null)
+        }  
+      }
+      catch (error) {
+        console.log(error)
+      }
     }
     initUser()
   }, [updateUser])

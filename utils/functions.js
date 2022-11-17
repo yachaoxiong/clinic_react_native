@@ -1,6 +1,5 @@
 import * as SecureStore from 'expo-secure-store';
 //calculate BMI BY WEIGHT(KG) AND HEIGHT(CM)
-
 export const calculateBMI = (weight, height) => {
 
     // calculate BMI
@@ -56,15 +55,6 @@ export const setCurrentUser = async (user) => {
     await SecureStore.setItemAsync('user', JSON.stringify(user));
   } catch (error) {
     console.log('Error setting user', error);
-  }
-}
-
-export const getCurrentUser = async () => {
-  try {
-    const user = await SecureStore.getItemAsync('user');
-    return JSON.parse(user);
-  } catch (error) {
-    console.log('Error getting user', error);
   }
 }
 

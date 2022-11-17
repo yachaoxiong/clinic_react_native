@@ -24,6 +24,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: getAppStyle().colors.white,
   },
+  smTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: getAppStyle().colors.white,
+  },
   value: {
     fontSize: 14,
     color: getAppStyle().colors.white,

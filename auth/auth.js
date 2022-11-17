@@ -1,4 +1,4 @@
-import {setToken, setCurrentUser} from '../utils/functions';
+import {setToken, setCurrentUser, getToken } from '../utils/functions';
 
 export const login = ( username, password) => {
   return fetch('https://yachao-clinic-app.herokuapp.com/api/auth/login', {
@@ -44,6 +44,27 @@ export const register = (username, password, email, role) => {
     })
     .catch((error) => {
       console.error(error);
+ 
     }
   );
+}
+
+
+export const getUser = async () => {
+  const token = await getToken();
+
+  try {
+    const response = await fetch('https://yachao-clinic-app.herokuapp.com/api/auth/getUser', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      }
+    })
+    const responseJson = await response.text();
+    return responseJson;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
 }
