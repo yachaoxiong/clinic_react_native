@@ -8,7 +8,7 @@ import { login } from '../auth/auth';
 
 export default function LoginScreen(props) {
 
-  const {myUser, updateUser} = useContext(StoreContext);
+  const { updateUser } = useContext(StoreContext);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
@@ -16,9 +16,11 @@ export default function LoginScreen(props) {
   const handleLogin = () => {
     if (username === '' || password === '') {
       setMessage('Please fill in all fields');
-    }else {
+    } else {
+      console.log("username", username)
       login(username, password)
         .then(res => {
+          console.log("res",res)
           if (res.user) {
             updateUser(res.user);
             props.navigation.navigate('Home');

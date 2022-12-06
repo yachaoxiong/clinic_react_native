@@ -8,6 +8,12 @@ import Modal from "react-native-modal";
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import getAppStyle from '../../common/styles';
 import { deletePatient } from '../../services/patientServices';
+import { LogBox } from 'react-native';
+
+LogBox.ignoreLogs([
+  'Non-serializable values were found in the navigation state',
+]);
+
 export default function Info(props) {
 
   const { patient } = props;
@@ -16,6 +22,7 @@ export default function Info(props) {
   const handleDeletePatient = () => {
     deletePatient(patient._id).then(() => {
       props.navigation.replace('Home');
+      
     }).catch((err) => {
       console.log(err);
     }) 

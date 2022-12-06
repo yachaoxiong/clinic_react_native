@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { View, Text, Button } from 'react-native';
 import styles from './styles/usePatientDetailsStyle';
 import AppButton from '../components/ui/AppButton';
@@ -10,84 +10,73 @@ import Modal from "react-native-modal";
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AppInput from '../components/ui/AppInput';
 import AppSelect from '../components/ui/AppSelect';
-
-
+import { addNewRecord } from '../services/patientServices';
+import { StoreContext } from '../store/store';
 export default function PatientDetails(props) {
 
   const { patient } = props.route.params;
+  const { setIsRefreshing } = useContext(StoreContext);
   const tabs = ['Info', 'Record', 'History'];
   const [activeTab, setActiveTab] = useState("Info");
   const [openAddRecordModal, setOpenAddRecordModal] = useState(false);
   const [testType, setTestType] = useState('Blood Pressure');
-  const [nurseName, setNurseName] = useState("");
+  const [status, setStatus] = useState('normal');
   const [testValue, setTestValue] = useState("");
   const [testValue2, setTestValue2] = useState("");
-  const records = [
-     {
-      id: 1,
-      date: '2020-01-01',
-      type: 'Blood Pressure',
-      value: '180/29',
-      unit: 'X/Y mmHg',
-      icon: 'blood',
-      status: 'critical',
-    },
-    {
-      id: 2,
-      date: '2020-01-01',
-      type: 'Blood Oxygen Level',
-      value: '96',
-      unit: '%',
-      icon: 'Oxygen',
-      status: 'normal',
-    },
-    {
-      id: 3,
-      date: '2020-01-01',
-      type: 'Heart Rate',
-      value: '10',
-      unit: 'bpm',
-      icon: 'blood',
-      status: 'normal',
-    },
-    {
-      id: 4,
-      date: '2020-01-01',
-      type: 'Respiratory Rate',
-      value: '10',
-      unit: 'bpm',
-      icon: 'brain',
-      status: 'normal',
-    },
-  ];
+
+
   const options = [
     'Blood Pressure',
     'Blood Oxygen Level',
     'Heart Rate',
     'Respiratory Rate'
   ];
+  const statusOptions = [
+    'critical',
+    'normal',
+  ]
+  const handleAddRecord = () => {
+    setOpenAddRecordModal(false);
+    let test = {}
+    if(testType === 'Blood Pressure'){
+       test = {
+        "category":testType,
+        "readings":[
+            {
+                "name":"diatomic",
+                "value":testValue
+            },
+            {
+                "name":"systolic",
+                "value":testValue2
+            }
+        ],
+        patient: patient?._id,
+        "isCritical":status === 'critical',
+     }
+    } else {
+      test = {
+        "category":testType,
+        "readings":[
+            {
+                "name":"value",
+                "value":testValue
+            }
+        ],
+        patient: patient?._id,
+        "isCritical":status === 'critical',
+     }
+    }
 
-  const historyList = [
-    {
-      id: 1,
-      date: '2020-01-01',
-      action: 'Added Patient to the system',
-      createdBy: 'Dr. John Doe',
-    },
-    {
-      id: 2,
-      date: '2020-01-01',
-      action: 'Updated Patient details',
-      createdBy: 'Dr. John Doe',
-    },
-    {
-      id: 3,
-      date: '2020-01-01',
-      action: 'Deleted Patient from the system',
-      createdBy: 'Dr. John Doe',
-    },
-  ];
-
+    addNewRecord(patient?._id, test).then((res) => {
+      setActiveTab('Info');
+      setIsRefreshing(pre=>!pre); 
+    }
+    ).catch((err) => {
+      console.log(err);
+    })
+  }
+ 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -109,20 +98,19 @@ export default function PatientDetails(props) {
           activeTab === 'Info'
           ? <Info patient={patient} {...props}/>
           : activeTab === 'Record'
-          ? <Record records={records} />
-          : <History historyList={historyList} />
+          ? <Record  patient={patient}/>
+          : <History patient={patient}/>
       }
       <Modal isVisible={openAddRecordModal}>
         <View style={styles.modalContainer}>
           <View style={styles.modalButton}>
               <FontAwesome name="close" size={30} color={styles.modalColor.color} onPress={() => setOpenAddRecordModal(false)} />
             </View>
-           <Text style={styles.modalTitle}>Add New Patient</Text>
+           <Text style={styles.modalTitle}>Add New Record</Text>
            <View style={styles.divider}></View>
           <AppSelect data={options} setValue={setTestType}
             defaultValue={testType}
             placeholder="Select Test Type" />
-          <AppInput placeholder="Nurse Name" value={nurseName} onChangeText={text => setNurseName(text)} />
           {
             testType === 'Blood Pressure'
               ? (
@@ -133,7 +121,8 @@ export default function PatientDetails(props) {
               )
               : <AppInput placeholder="Value"  value={testValue} onChangeText={text => setTestValue(text)} />
           }
-          <AppButton title="Add Record" buttonType="primary" style={styles.actionBtn} onPress={() => setOpenAddRecordModal(false)} />
+          <AppSelect data={statusOptions} setValue={setStatus} defaultValue={"normal"} placeholder="Select Status" />
+          <AppButton title="Add Record" buttonType="primary" style={styles.actionBtn} onPress={handleAddRecord} />
           </View>
       </Modal>
    </View>

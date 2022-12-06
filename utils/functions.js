@@ -21,10 +21,6 @@ export const calculateBMI = (weight, height) => {
   return { bmi: convertedBmi, result };
 }
 
-// to install it 'expo install expo-secure-store'
-
-
-
 export const setToken = async (token) => {
   try {
     await SecureStore.setItemAsync('token', token);
@@ -50,18 +46,4 @@ export const removeToken = async () => {
   }
 }
 
-export const setCurrentUser = async (user) => {
-  try {
-    await SecureStore.setItemAsync('user', JSON.stringify(user));
-  } catch (error) {
-    console.log('Error setting user', error);
-  }
-}
 
-export const removeCurrentUser = async () => {
-  try {
-    await SecureStore.deleteItemAsync('user');
-  } catch (error) {
-    console.log('Error removing user', error);
-  }
-}

@@ -31,6 +31,7 @@ const styles = StyleSheet.create({
     color: getAppStyle().colors.primary,
     fontSize: 16,
     fontWeight: 'bold',
+    
   }, 
   radioGroup: {
     flexDirection: 'row',

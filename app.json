@@ -6,6 +6,12 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "scripts": {
+      "test": "jest"
+    },
+    "jest": {
+      "preset": "jest-expo"
+    },
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",

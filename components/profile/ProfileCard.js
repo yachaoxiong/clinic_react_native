@@ -6,13 +6,13 @@ import AppButton from '../ui/AppButton';
 import { removeToken } from '../../utils/functions';
 import { StoreContext } from '../../store/store';
 
-export default function ProfileCard(props) {
+export default function ProfileCard() {
   const { myUser, updateUser } = useContext(StoreContext);
 
   const logout = async () => {
     try {
-      updateUser(null) 
       removeToken();
+      updateUser(null) 
     }
     catch (err) {
       console.log(err);
@@ -20,6 +20,7 @@ export default function ProfileCard(props) {
   }
 
   return (
+    myUser &&
     <View style={styles.container}>
       <View style={styles.sectionRow}>
         <Text style={styles.text}>username</Text>

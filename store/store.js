@@ -7,7 +7,7 @@ export const StoreContext = createContext()
 const StoreContextProvider = ({ children }) => {
   
   const [myUser, setMyUser] = useState(null)
-   
+  const [isRefreshing, setIsRefreshing] = useState(false)
   const updateUser = (user) => {
     setMyUser(user)
   }
@@ -18,7 +18,7 @@ const StoreContextProvider = ({ children }) => {
         const token = await getToken();
         if (token) {
           const user = await getUser()
-          updateUser(user)
+          user && updateUser(user)
         } else {
           updateUser(null)
         }  
@@ -28,7 +28,7 @@ const StoreContextProvider = ({ children }) => {
       }
     }
     initUser()
-  }, [updateUser])
+  }, [])
 
 
   return (
@@ -36,6 +36,8 @@ const StoreContextProvider = ({ children }) => {
       value={{
         myUser: myUser,
         updateUser: updateUser,
+        setIsRefreshing: setIsRefreshing,
+        isRefreshing: isRefreshing
       }}
     >
       {children}

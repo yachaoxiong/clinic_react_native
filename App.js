@@ -1,5 +1,5 @@
-import React,{ useContext } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import React from 'react';
+import { View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Tabs from './components/layouts/Tabs';
@@ -55,7 +55,9 @@ export default function App() {
               ) : (
              <>   
             <Stack.Screen name="Home" component={Tabs} options={{ headerShown: false }} />
-            <Stack.Screen name="PatientDetails" component={PatientDetails}
+            <Stack.Screen 
+             name="PatientDetails"
+             component={PatientDetails}
               options={{
                 title: 'Patient Details',
                 headerBackTitle: ' ',

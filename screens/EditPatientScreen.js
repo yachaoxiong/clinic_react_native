@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState} from 'react'
+import React, { useContext, useEffect, useState} from 'react'
 import { View, Text, ScrollView } from 'react-native';
 import AppInput from '../components/ui/AppInput';
 import AppSelect from '../components/ui/AppSelect';
@@ -7,8 +7,11 @@ import AppButton from '../components/ui/AppButton';
 import styles from './styles/useEditPatientStyle';
 import { updatePatient } from '../services/patientServices';
 import moment from 'moment';
-export default function EditPatient(props) {
+import { StoreContext } from '../store/store';
 
+export default function EditPatient(props) {
+ 
+  const {setIsRefreshing} = useContext(StoreContext);
   const { patient,setPatients } = props.route.params;
   const [patientInfo, setPatientInfo] = useState({...patient});
 
@@ -130,7 +133,8 @@ export default function EditPatient(props) {
   ]
   const handleUpdatePatient = () => {
     updatePatient(patientInfo).then((response) => {
-      props.navigation.replace("Home")
+      props.navigation.goBack();
+      setIsRefreshing(pre=>!pre)
     }).catch((error) => {
       console.log(error)
     })

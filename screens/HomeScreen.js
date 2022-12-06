@@ -15,14 +15,13 @@ export default function HomeScreen(props) {
   
   // search function
   const filteredPatients = useCallback(() => {
-    return patients.filter(patient => {
-      return patient.firstName.toLowerCase().includes(searchTerm.toLowerCase()) || patient.lastName.toLowerCase().includes(searchTerm.toLowerCase())
+    return patients?.filter(patient => {
+      return patient?.firstName.toLowerCase().includes(searchTerm.toLowerCase()) || patient.lastName.toLowerCase().includes(searchTerm.toLowerCase())
     }).filter(patient => {
       return isCritical && isNormal ? true : isCritical ? patient.status === 'critical' : isNormal ? patient.status === 'normal' : true;
     });
   }, [searchTerm, isCritical, isNormal, patients]);
    
-  
   return (
     <View style={styles.container}>
       <SearchBar placeholder="Search" onChangeText={(text) => setSearchTerm(text)} />
@@ -58,3 +57,5 @@ export default function HomeScreen(props) {
     </View>
   )
 }
+
+

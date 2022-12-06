@@ -1,8 +1,31 @@
 const { getToken } = require('../utils/functions');
+import fetch from 'node-fetch';
+
+
 
 export const getAllPatients = async () => {
   const token = await getToken();
-  return fetch('https://yachao-clinic-app.herokuapp.com/api/patients', {
+  if (!token) return;
+  return fetch('https://yachao-clinic-node.herokuapp.com/api/patients', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token
+    }
+  })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      return responseJson;
+    })
+    .catch((error) => {
+      console.error(error);
+    }
+  );
+}
+
+export const getPatientById = async (patientId) => {
+  const token = await getToken();
+  return fetch(`https://yachao-clinic-node.herokuapp.com/api/patients/${patientId}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -21,8 +44,8 @@ export const getAllPatients = async () => {
 
 export const updatePatient = async (patient) => {
   const token = await getToken();
-  console.log("patient", patient);
-  return fetch(`https://yachao-clinic-app.herokuapp.com/api/patients/${patient._id}`, {
+
+  return fetch(`https://yachao-clinic-node.herokuapp.com/api/patients/${patient._id}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -43,7 +66,7 @@ export const updatePatient = async (patient) => {
 
 export const addNewPatient = async (patient) => {
   const token = await getToken();
-  return fetch('https://yachao-clinic-app.herokuapp.com/api/patients', {
+  return fetch('https://yachao-clinic-node.herokuapp.com/api/patients', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -65,7 +88,7 @@ export const addNewPatient = async (patient) => {
 
 export const deletePatient = async (patientId) => {
   const token = await getToken();
-  return fetch(`https://yachao-clinic-app.herokuapp.com/api/patients/${patientId}`, {
+  return fetch(`https://yachao-clinic-node.herokuapp.com/api/patients/${patientId}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application',
@@ -83,5 +106,69 @@ export const deletePatient = async (patientId) => {
   );
 }
 
+export const getPatientHistory = async (patientId) => {
+  
+  const token = await getToken();
+  return fetch(`https://yachao-clinic-node.herokuapp.com/api/patients/${patientId}/histories`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'authorization': 'Bearer ' + token
+    }
+  })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      return responseJson;
+    }
+  )
+    .catch((error) => {
+      console.error(error);
+    }
+  );
+}
+
+
+export const addNewRecord = async (patientId, record) => {
+
+  const token = await getToken();
+  return fetch(`https://yachao-clinic-node.herokuapp.com/api/patients/${patientId}/tests`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'authorization': 'Bearer ' + token
+    },
+    body: JSON.stringify(record)
+  })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      return responseJson;
+    }
+  )
+    .catch((error) => {
+      console.error(error);
+    }
+  );
+}
+
+export const getAllTestsByPatientId = async (patientId) => {
+
+  const token = await getToken();
+  return fetch(`https://yachao-clinic-node.herokuapp.com/api/patients/${patientId}/tests`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'authorization': 'Bearer ' + token
+    }
+  })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      return responseJson;
+    }
+  )
+    .catch((error) => {
+      console.error(error);
+    }
+  );
+}
 
 
